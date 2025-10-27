@@ -51,5 +51,18 @@ public class AuthController {
     public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication){
         if(authentication == null) return ResponseEntity.status(401).build();
         return ResponseEntity.ok(authentication.getName());
+        var opt = userRepository.findByEmail(email);
+        if(opt.isEmpty()) return ResponseEntity.status(404).build();
+        var user = opt.get();
+        // Construire la réponse au format attendu par le front
+        Map<String, Object> body = Map.of(
+                "id", user.getId(),
+                "name", (user.getFirstName() == null ? "" : user.getFirstName())
+                        + (user.getLastName() == null ? "" : (" " + user.getLastName())),
+                "email", user.getEmail(),
+                "created_at", user.getCreatedAt(),
+                "updated_at", user.getUpdatedAt()
+        );
+        return ResponseEntity.ok(body);
     }
 }
