@@ -17,9 +17,9 @@ This project is a generated scaffold implementing the following requested featur
 2. Update credentials in `src/main/resources/application.properties` if needed.
 3. Run:
    ```bash
-   ./mvnw spring-boot:run
+   mvnw spring-boot:run
    ```
-4. Swagger UI: http://localhost:8080/swagger-ui.html
+4. Swagger UI: http://localhost:3001/swagger-ui.html
 5. Important: change `chatop.jwt.secret` value to a secure random secret in production.
 
 ## Notes

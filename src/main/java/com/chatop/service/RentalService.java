@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class RentalService {
     private final RentalRepository repo;
     public RentalService(RentalRepository repo){this.repo = repo;}

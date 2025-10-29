@@ -48,13 +48,22 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication){
-        if(authentication == null) return ResponseEntity.status(401).build();
-        return ResponseEntity.ok(authentication.getName());
+    public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication) {
+        if (authentication == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        // 👉 Récupérer l'email de l'utilisateur connecté
+        String email = authentication.getName();
+
         var opt = userRepository.findByEmail(email);
-        if(opt.isEmpty()) return ResponseEntity.status(404).build();
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(404).build();
+        }
+
         var user = opt.get();
-        // Construire la réponse au format attendu par le front
+
+        // 👉 Construire la réponse au format attendu par le front
         Map<String, Object> body = Map.of(
                 "id", user.getId(),
                 "name", (user.getFirstName() == null ? "" : user.getFirstName())
