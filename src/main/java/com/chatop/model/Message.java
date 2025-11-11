@@ -32,16 +32,4 @@ public class Message {
     @PreUpdate
     public void preUpdate(){ this.updatedAt = LocalDateTime.now(); }
 
-    // Getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public User getUser() { return user; }
-    public void setUser(User user) { this.user = user; }
-
-    public Rental getRental() { return rental; }
-    public void setRental(Rental rental) { this.rental = rental; }
 }

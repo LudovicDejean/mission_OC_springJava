@@ -32,14 +32,4 @@ public class Rental {
     @PreUpdate
     public void preUpdate(){ this.updatedAt = LocalDateTime.now(); }
 
-    // Getters & setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getPicture() { return picture; }
-    public void setPicture(String picture) { this.picture = picture; }
-
-    public User getOwner() { return owner; }
-    public void setOwner(User owner) { this.owner = owner; }
-
 }

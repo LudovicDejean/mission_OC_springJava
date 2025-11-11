@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "USERS", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
