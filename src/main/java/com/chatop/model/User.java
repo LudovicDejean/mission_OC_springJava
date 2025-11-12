@@ -3,14 +3,23 @@ package com.chatop.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import lombok.EqualsAndHashCode;
 import java.time.LocalDateTime;
 
+/**
+ * Représente un utilisateur de l'application.
+ */
 @Entity
-@Table(name = "USERS", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Table(name = "USERS")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
     private String email;
     private String password;
@@ -39,9 +48,15 @@ public class User {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    @PrePersist
+    /** Initialise createdAt à l’insertion. */
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    @PreUpdate
+    /** Met à jour updatedAt à chaque update. */
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

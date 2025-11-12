@@ -1,62 +1,66 @@
-
 package com.chatop.controller;
 
 import com.chatop.model.Rental;
-import com.chatop.repository.UserRepository;
 import com.chatop.service.RentalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
+/**
+ * Endpoints REST pour la gestion des locations.
+ * Aucune dépendance à un Repository : on passe par le service.
+ */
 @RestController
 @RequestMapping("/api/rentals")
 public class RentalController {
-    private final RentalService service;
-    private final UserRepository userRepository;
-    private final String uploadDir;
 
-    public RentalController(RentalService service, UserRepository userRepository, org.springframework.core.env.Environment env){
-        this.service = service; this.userRepository = userRepository;
-        this.uploadDir = env.getProperty("chatop.upload.dir","uploads");
-        File dir = new File(this.uploadDir);
-        if(!dir.exists()) dir.mkdirs();
+    private final RentalService rentalService;
+
+    public RentalController(final RentalService rentalService) {
+        this.rentalService = rentalService;
     }
 
+    /** Retourne toutes les locations. */
     @GetMapping
-    public List<Rental> all(){ return service.findAll(); }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Rental> get(@PathVariable Long id){
-        return service.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> all() {
+        return ResponseEntity.ok(rentalService.findAll());
     }
 
+    /** Retourne une location par id. */
+    @GetMapping("/{id}")
+    public ResponseEntity<?> byId(@PathVariable final Long id) {
+        return rentalService.findById(id)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /** Crée une location (multipart) avec fichier optionnel. */
     @PostMapping(consumes = {"multipart/form-data"})
     @PreAuthorize("hasAuthority('OWNER')")
-    public ResponseEntity<?> create(@RequestPart("rental") Rental r, @RequestPart(value="file", required=false) MultipartFile file) throws IOException {
-        if(file != null && !file.isEmpty()){
-            String filename = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-            Path target = Paths.get(uploadDir).resolve(filename);
-            Files.copy(file.getInputStream(), target);
-            r.setPicture("/" + uploadDir + "/" + filename);
+    public ResponseEntity<?> create(@RequestPart("rental") final Rental rental,
+                                    @RequestPart(value = "picture", required = false) final MultipartFile picture)
+            throws IOException {
+        if (picture != null && !picture.isEmpty()) {
+            // Tu peux injecter UPLOAD_DIR via @Value("${chatop.upload.dir}")
+            Path uploadDir = Paths.get("uploads");
+            Path target = uploadDir.resolve(picture.getOriginalFilename());
+            rentalService.storeFile(picture.getBytes(), target);
+            rental.setPicture(target.toString());
         }
-        if(r.getOwner() != null && r.getOwner().getId() != null){
-            userRepository.findById(r.getOwner().getId()).ifPresent(r::setOwner);
-        }
-        Rental saved = service.save(r);
+        Rental saved = rentalService.save(rental);
         return ResponseEntity.ok(saved);
     }
 
+    /** Supprime une location. */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('OWNER')")
-    public ResponseEntity<?> delete(@PathVariable Long id){
-        service.delete(id); return ResponseEntity.noContent().build();
+    public ResponseEntity<?> delete(@PathVariable final Long id) {
+        rentalService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,77 +1,53 @@
-
 package com.chatop.controller;
 
 import com.chatop.model.User;
-import com.chatop.repository.UserRepository;
 import com.chatop.security.JwtUtils;
+import com.chatop.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Authentification / inscription et endpoint "me".
+ * Passe par UserService (aucun accès direct au repository).
+ */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils){
-        this.userRepository = userRepository;
+    public AuthController(final UserService userService,
+                          final PasswordEncoder passwordEncoder,
+                          final JwtUtils jwtUtils) {
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
     }
 
+    /** Enregistre un utilisateur puis retourne un JWT. */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user){
-        if(userRepository.existsByEmail(user.getEmail())){
-            return ResponseEntity.badRequest().body(Map.of("error","email already used"));
+    public ResponseEntity<?> register(@RequestBody final User user) {
+        if (userService.findByEmail(user.getEmail()).isPresent()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Email already used"));
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if(user.getRole() == null) user.setRole("TENANT");
-        userRepository.save(user);
-        return ResponseEntity.ok(Map.of("status","ok"));
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String,String> body){
-        String email = body.get("email");
-        String password = body.get("password");
-        var opt = userRepository.findByEmail(email);
-        if(opt.isEmpty()) return ResponseEntity.status(401).body(Map.of("error","invalid credentials"));
-        var user = opt.get();
-        if(!passwordEncoder.matches(password, user.getPassword())) return ResponseEntity.status(401).body(Map.of("error","invalid credentials"));
-        String token = jwtUtils.generateToken(user.getEmail(), user.getRole());
+        User saved = userService.save(user);
+        String token = jwtUtils.generateToken(saved.getEmail(), saved.getRole());
         return ResponseEntity.ok(Map.of("token", token));
     }
 
+    /** Retourne le profil “me” à partir du token Bearer. */
     @GetMapping("/me")
-    public ResponseEntity<?> me(org.springframework.security.core.Authentication authentication) {
-        if (authentication == null) {
-            return ResponseEntity.status(401).build();
-        }
-
-        // 👉 Récupérer l'email de l'utilisateur connecté
-        String email = authentication.getName();
-
-        var opt = userRepository.findByEmail(email);
-        if (opt.isEmpty()) {
-            return ResponseEntity.status(404).build();
-        }
-
-        var user = opt.get();
-
-        // 👉 Construire la réponse au format attendu par le front
-        Map<String, Object> body = Map.of(
-                "id", user.getId(),
-                "name", (user.getFirstName() == null ? "" : user.getFirstName())
-                        + (user.getLastName() == null ? "" : (" " + user.getLastName())),
-                "email", user.getEmail(),
-                "created_at", user.getCreatedAt(),
-                "updated_at", user.getUpdatedAt()
-        );
-        return ResponseEntity.ok(body);
+    public ResponseEntity<?> me(@RequestHeader("Authorization") final String authHeader) {
+        String token = authHeader.replace("Bearer ", "");
+        String email = jwtUtils.getUserNameFromJwtToken(token);
+        return userService.findByEmail(email)
+                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

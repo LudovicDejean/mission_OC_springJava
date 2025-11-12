@@ -12,10 +12,10 @@ import java.util.Date;
 @Component
 public class JwtUtils {
 
-    @Value("${chatop.jwt.secret}")
+    @Value("${chatop.jwt.secret:ReplaceThisSecretWithASecureOneChangeMe}")
     private String jwtSecret;
 
-    @Value("${chatop.jwt.expiration-ms}")
+    @Value("${chatop.jwt.expiration-ms:3600000}")
     private long jwtExpirationMs;
 
     Key getSigningKey(){
