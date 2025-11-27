@@ -130,4 +130,7 @@ public class Rental {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public void setOwnerId(Long id) {
+    }
 }

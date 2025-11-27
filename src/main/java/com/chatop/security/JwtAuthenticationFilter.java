@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import io.jsonwebtoken.Jwts;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,6 +33,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
+
+        // ---------- FIX MULTIPART ----------
+        // Certains navigateurs / Angular / Postman en multipart peuvent faire perdre les headers
+        if (header == null && request instanceof MultipartHttpServletRequest multipartRequest) {
+            header = multipartRequest.getHeader("Authorization");
+        }
+        // ------------------------------------
+
         try {
             if (header != null && header.startsWith("Bearer ")) {
                 String token = header.substring(7);

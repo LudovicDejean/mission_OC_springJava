@@ -16,7 +16,7 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
-    private final UserRepository userRepository;
+    private static UserRepository userRepository = null;
 
     public UserService(final UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -28,7 +28,7 @@ public class UserService {
      * @return Optional<User>
      */
     @Transactional(readOnly = true)
-    public Optional<User> findByEmail(final String email) {
+    public static Optional<User> findByEmail(final String email) {
         return userRepository.findByEmail(email);
     }
 

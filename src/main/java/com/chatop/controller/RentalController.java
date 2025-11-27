@@ -1,15 +1,19 @@
 package com.chatop.controller;
 
 import com.chatop.model.Rental;
+import com.chatop.model.User;
 import com.chatop.service.RentalService;
+import com.chatop.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
 /**
  * Endpoints REST pour la gestion des locations.
@@ -42,18 +46,27 @@ public class RentalController {
     /** Crée une location (multipart) avec fichier optionnel. */
     @PostMapping(consumes = {"multipart/form-data"})
     @PreAuthorize("hasAuthority('OWNER')")
-    public ResponseEntity<?> create(@RequestPart("rental") final Rental rental,
-                                    @RequestPart(value = "picture", required = false) final MultipartFile picture)
-            throws IOException {
-        if (picture != null && !picture.isEmpty()) {
-            // Tu peux injecter UPLOAD_DIR via @Value("${chatop.upload.dir}")
-            Path uploadDir = Paths.get("uploads");
-            Path target = uploadDir.resolve(picture.getOriginalFilename());
-            rentalService.storeFile(picture.getBytes(), target);
-            rental.setPicture(target.toString());
-        }
-        Rental saved = rentalService.save(rental);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<?> createRental(
+            @RequestParam String name,
+            @RequestParam Integer surface,
+            @RequestParam Integer price,
+            @RequestParam MultipartFile picture,
+            @RequestParam String description,
+            Authentication authentication
+    ) {
+        String email = authentication.getName();
+        User owner = UserService.findByEmail(email).orElseThrow();
+
+        Rental rental = new Rental();
+        rental.setName(name);
+        rental.setSurface(Double.valueOf(surface));
+        rental.setPrice(Double.valueOf(price));
+        rental.setDescription(description);
+        rental.setOwnerId(owner.getId());
+
+        rentalService.save(rental);
+
+        return ResponseEntity.ok().body(Map.of("message", "Rental created"));
     }
 
     /** Supprime une location. */
