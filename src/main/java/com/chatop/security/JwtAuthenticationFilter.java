@@ -32,17 +32,40 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-        if(header != null && header.startsWith("Bearer ")){
-            String token = header.substring(7);
-            if(jwtUtils.validateJwtToken(token)){
-                String username = jwtUtils.getUserNameFromJwtToken(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                // extract role claim
-                String role = Jwts.parserBuilder().setSigningKey(jwtUtils.getSigningKey()).build().parseClaimsJws(token).getBody().get("role", String.class);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, List.of(new SimpleGrantedAuthority(role)));
-                SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            if (header != null && header.startsWith("Bearer ")) {
+                String token = header.substring(7);
+
+                if (jwtUtils.validateJwtToken(token)) {
+                    String username = jwtUtils.getUserNameFromJwtToken(token);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                    String role = jwtUtils.getRoleFromJwtToken(token);
+                    UsernamePasswordAuthenticationToken auth;
+
+                    if (role != null && !role.isBlank()) {
+                        auth = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                List.of(new SimpleGrantedAuthority(role))
+                        );
+                    } else {
+                        // fallback si jamais le token n'a pas de claim role
+                        auth = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+                    }
+
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
+        } catch (IllegalArgumentException ex) {
+            // évite de casser toute la chaîne sur un rôle null
+            SecurityContextHolder.clearContext();
         }
+
         filterChain.doFilter(request, response);
         //System.out.println("Header Authorization = " + header);
     }

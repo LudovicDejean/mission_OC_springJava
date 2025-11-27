@@ -23,6 +23,9 @@ public class JwtUtils {
     }
 
     public String generateToken(String username, String role){
+        if (role == null || role.isBlank()) {
+            role = "TENANT"; // valeur par défaut
+        }
         Date now = new Date();
         Date exp = new Date(now.getTime() + jwtExpirationMs);
         return Jwts.builder()
@@ -36,6 +39,14 @@ public class JwtUtils {
 
     public String getUserNameFromJwtToken(String token){
         return Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(token).getBody().getSubject();
+    }
+    public String getRoleFromJwtToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 
     public boolean validateJwtToken(String authToken){
