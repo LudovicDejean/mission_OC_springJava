@@ -36,19 +36,20 @@ public class AuthController {
 
     /** Enregistre un utilisateur puis retourne un JWT. */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-
-        if (userService.existsByEmail(request.email())) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> register(@RequestParam String email,
+                                      @RequestParam String name,
+                                      @RequestParam String password
+    ) {
+        if (userService.existsByEmail(email)) {
+            return ResponseEntity.badRequest()
                     .body(Map.of("error", "Email already used"));
         }
 
         User user = new User();
-        user.setEmail(request.email());
-        user.setName(request.name());
-        user.setPassword(passwordEncoder.encode(request.password()));
-        user.setRole("TENANT"); // rôle par défaut
+        user.setEmail(email);
+        user.setName(name);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole("OWNER"); // rôle par défaut
 
         User saved = userService.save(user);
         String token = jwtUtils.generateToken(saved.getEmail(), saved.getRole());

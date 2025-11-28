@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         String role = user.getRole();
         if (role == null || role.isBlank()) {
-            role = "TENANT";
+            role = "OWNER";
         }
 
         return org.springframework.security.core.userdetails.User

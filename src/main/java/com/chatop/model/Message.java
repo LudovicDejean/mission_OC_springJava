@@ -9,7 +9,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "MESSAGES")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Message {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) @EqualsAndHashCode.Include
     private Long id;

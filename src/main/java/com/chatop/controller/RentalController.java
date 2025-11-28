@@ -1,18 +1,24 @@
 package com.chatop.controller;
 
+import com.chatop.mapper.RentalMapper;
 import com.chatop.model.Rental;
 import com.chatop.model.User;
 import com.chatop.service.RentalService;
 import com.chatop.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -24,9 +30,13 @@ import java.util.Map;
 public class RentalController {
 
     private final RentalService rentalService;
+    private final UserService userService;
+    private final RentalMapper rentalMapper;
 
-    public RentalController(final RentalService rentalService) {
+    public RentalController(final RentalService rentalService, UserService userService, RentalMapper rentalMapper) {
         this.rentalService = rentalService;
+        this.userService = userService;
+        this.rentalMapper = rentalMapper;
     }
 
     /** Retourne toutes les locations. */
@@ -44,34 +54,47 @@ public class RentalController {
     }
 
     /** Crée une location (multipart) avec fichier optionnel. */
-    @PostMapping(consumes = {"multipart/form-data"})
-    @PreAuthorize("hasAuthority('OWNER')")
-    public ResponseEntity<?> createRental(
-            @RequestParam String name,
-            @RequestParam Integer surface,
-            @RequestParam Integer price,
-            @RequestParam MultipartFile picture,
-            @RequestParam String description,
+    @PostMapping(value = "/rentals", consumes = {"multipart/form-data"})
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<?> create(
+            @RequestParam("name") String name,
+            @RequestParam("surface") Integer surface,
+            @RequestParam("price") Integer price,
+            @RequestParam(value = "picture", required = false) MultipartFile picture,
+            @RequestParam("description") String description,
             Authentication authentication
-    ) {
+    ) throws IOException {
+
+        // Récupérer l'email depuis le token JWT
         String email = authentication.getName();
-        User owner = UserService.findByEmail(email).orElseThrow();
+        User owner = userService.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
         Rental rental = new Rental();
         rental.setName(name);
-        rental.setSurface(Double.valueOf(surface));
-        rental.setPrice(Double.valueOf(price));
+        rental.setSurface(surface);
+        rental.setPrice(price);
         rental.setDescription(description);
-        rental.setOwnerId(owner.getId());
+        rental.setOwner(owner); // ManyToOne<User> owner
 
-        rentalService.save(rental);
+        // Gestion du fichier si présent
+        if (picture != null && !picture.isEmpty()) {
+            Path uploadDir = Paths.get("uploads");
+            Files.createDirectories(uploadDir);
 
-        return ResponseEntity.ok().body(Map.of("message", "Rental created"));
+            Path target = uploadDir.resolve(picture.getOriginalFilename());
+            Files.copy(picture.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
+
+            rental.setPicture(target.getFileName().toString());
+        }
+
+        Rental saved = rentalService.save(rental);
+
+        return ResponseEntity.ok(rentalMapper.toDto(saved));
     }
 
     /** Supprime une location. */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('OWNER')")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<?> delete(@PathVariable final Long id) {
         rentalService.delete(id);
         return ResponseEntity.noContent().build();
