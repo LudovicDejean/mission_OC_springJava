@@ -5,7 +5,6 @@ import com.chatop.model.Rental;
 import com.chatop.model.User;
 import com.chatop.service.RentalService;
 import com.chatop.service.UserService;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -18,8 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * Endpoints REST pour la gestion des locations.
@@ -54,14 +51,14 @@ public class RentalController {
     }
 
     /** Crée une location (multipart) avec fichier optionnel. */
-    @PostMapping(value = "/rentals", consumes = {"multipart/form-data"})
+    @PostMapping(consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<?> create(
-            @RequestParam("name") String name,
-            @RequestParam("surface") Integer surface,
-            @RequestParam("price") Integer price,
-            @RequestParam(value = "picture", required = false) MultipartFile picture,
-            @RequestParam("description") String description,
+            @RequestPart("name") String name,
+            @RequestPart("surface") Double surface,
+            @RequestPart("price") Double price,
+            @RequestPart(value = "picture", required = false) MultipartFile picture,
+            @RequestPart("description") String description,
             Authentication authentication
     ) throws IOException {
 

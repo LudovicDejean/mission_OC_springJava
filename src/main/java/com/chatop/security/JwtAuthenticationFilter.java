@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         auth = new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,
-                                List.of(new SimpleGrantedAuthority(role))
+                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
                         );
                     } else {
                         // fallback si jamais le token n'a pas de claim role
