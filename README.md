@@ -1,11 +1,11 @@
-# Chatop Backend with JWT Auth (generated)
+# Chatop Backend with JWT Auth
 
 This project is a generated scaffold implementing the following requested features:
 - Spring Boot 3.5.5, Java 17, Maven
 - MySQL-ready configuration (edit credentials in application.properties)
 - JWT authentication (login/register/me)
 - Entities: USERS, RENTALS, MESSAGES (mapped to DB)
-- File upload for rental pictures (stored under `uploads/`)
+- File upload for rental pictures (stored under `upload/`)
 - Swagger UI: `/swagger-ui.html`
 - Example controllers for Rentals and Messages
 

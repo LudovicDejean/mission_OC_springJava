@@ -1,24 +1,39 @@
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\ChatopApplication.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\config\SecurityConfig.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\controller\AuthController.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\controller\MessageController.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\controller\RentalController.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\dto\LoginDTO.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\dto\MessageDTO.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\dto\RegisterDTO.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\dto\RentalDto.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\dto\UserDTO.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\mapper\MessageMapper.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\mapper\RentalMapper.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\mapper\UserMapper.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\model\Message.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\model\Rental.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\model\User.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\repository\MessageRepository.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\repository\RentalRepository.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\repository\UserRepository.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\security\CustomUserDetailsService.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\security\JwtAuthenticationFilter.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\security\JwtUtils.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\service\RentalService.java
-C:\workspace\java\back\chatop_backend_jwt\src\main\java\com\chatop\service\UserService.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\repository\RoleRepository.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\MessageResponse.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\mapper\UserMapper.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\RentalResponse.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\service\UserService.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\configuration\CorsFilter.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\controller\MessageController.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\controller\UserController.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\Message.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\dto\UserDTO.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\jwt\DomainUserDetailsService.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\jwt\TokenProvider.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\service\AccountRepositoryBaseService.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\exception\UserAlreadyExistException.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\DeleteResponse.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\repository\MessageRepository.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\dto\LoginDTO.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\dto\RegisterDTO.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\service\RentalService.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\controller\AccountController.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\controller\RentalController.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\exception\CustomExceptionHandler.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\mapper\MessageMapper.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\configuration\SecurityConfig.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\jwt\JwtAuthEntryPoint.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\ChaTopApplication.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\repository\RentalRepository.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\service\AccountService.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\dto\RentalDto.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\RentalOwner.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\mapper\RentalMapper.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\Rental.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\jwt\JwtFilter.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\RentalsResponse.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\dto\MessageDTO.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\User.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\repository\UserRepository.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\model\Role.java
+C:\Users\dejea\Desktop\OC Java-Angular\2-Back-end_Java\ChaTop\src\main\java\com\openclassrooms\service\MessageService.java
